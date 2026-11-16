@@ -8,7 +8,7 @@ I put together this lightweight local simulator to test `event_id` idempotency k
 
 * `gateway_simulator.py` — Spins up a local SQLite database (`payments.db`), starts a FastAPI receiver (`/webhook`) that randomly throws HTTP 500 errors ~25% of the time, and fires 20 mock `CAPTURED` payments with retry logic and occasional duplicate payloads.
 * `reconcile.py` — Compares `gateway_ledger` against `merchant_webhooks` using a SQL `LEFT JOIN` to catch any dropped transactions and writes the findings to `reconciliation_report.txt`.
-* `test_reconciler.py` — Basic `pytest` coverage making sure duplicate `event_id` payloads get ignored and missing webhooks get flagged.
+* `test_reconcile.py` — Basic `pytest` coverage making sure duplicate `event_id` payloads get ignored and missing webhooks get flagged.
 
 ## Running It Locally
 
@@ -61,17 +61,3 @@ Task complete
 
 
 
-
-Sample output 
-
-
-[OK] Delivered tx_1c4f01b1 on attempt 1
-
-Simulation complete. Press Ctrl+C to stop server, then run `python reconcile.py`.
-PS \payment - Webhook - reconciler> python reconcile.py         
-=== Payment Reconciliation Report ===
-Missing Merchant Webhooks Found: 0
-
-Report saved to reconciliation_report.txt
-Task complete
-PS \Payment - Webhook - reconciler> 
